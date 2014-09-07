@@ -46,7 +46,7 @@ describe Apriori do
       apriori = Apriori.new(sample_data, 50)
       list = apriori.count_frequency(apriori.list)
       candidates = apriori.retrieve_candidates(list)
-      expect(apriori.create_new_set(candidates)).to eql([
+      expect(apriori.create_new_list(candidates)).to eql([
         ['Mango', 'Onion'],
         ['Mango', 'Keychain'],
         ['Mango', 'Eggs'],

@@ -1,19 +1,27 @@
 class Apriori
   attr_reader :min_support, :min_confidence, :data_set
-  attr_accessor :list
+  attr_accessor :list, :matching_rules
 
   def initialize(data_set, min_support, min_confidence=0)
     @data_set = data_set
     @min_support = min_support
     @min_confidence = min_confidence
     @size = 0
-    @list = create_new_set(convert_initial_data_set)
+    @list = create_new_list(convert_initial_data_set)
   end
 
+  # development notes
+  # loop until the list is empty
+  # count frequency of items in list
+  # get candiates, by determining if they meet minimum support
+  # add all matching candidates to possible association rules
+  # create a new list
   def mine
-    #list = create_new_set(data_set)
-    #candidates = count_frequency (data_set)
-    #remove_candidates(candidates)
+    while !list.empty?
+      new_list = count_frequency(list)
+      candidates = retrieve_candidates(new_list)
+      list = create_new_list(candidates)
+    end
   end
 
   def count_frequency set
@@ -31,7 +39,7 @@ class Apriori
     list.reject!{|key, value| (value.to_f/data_set.count) * 100 < min_support}.keys
   end
 
-  def create_new_set candidates
+  def create_new_list candidates
     @size += 1
     candidates.combination(@size).to_a
   end
