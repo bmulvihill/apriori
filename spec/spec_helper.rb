@@ -1,4 +1,4 @@
-require_relative File.join('..', 'apriori', 'apriori')
+Dir["./lib/*.rb"].each {|file| require file }
 RSpec.configure do |config|
 
 end
