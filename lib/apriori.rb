@@ -1,13 +1,12 @@
 class Apriori
-  attr_reader :min_support, :min_confidence, :data_set
-  attr_accessor :list, :matching_rules
+  attr_reader :min_support, :min_confidence, :data_set, :list, :matching_rules, :iteration
 
   def initialize(data_set, min_support, min_confidence=0)
     @data_set = data_set
     @min_support = min_support
     @min_confidence = min_confidence
-    @size = 0
-    @list = create_new_list(convert_initial_data_set)
+    self.iteration = 0
+    self.list = create_new_list(convert_initial_data_set)
   end
 
   # development notes
@@ -16,35 +15,43 @@ class Apriori
   # get candiates, by determining if they meet minimum support
   # add all matching candidates to possible association rules
   # create a new list
-  def mine
-    while !list.empty?
+  def mine(min_support=0, min_confidence=0)
+    while !self.list.empty?
       new_list = count_frequency(list)
       candidates = retrieve_candidates(new_list)
-      list = create_new_list(candidates)
+      self.list = create_new_list(candidates)
     end
   end
 
-  def count_frequency set
-    list = {}
+  def count_frequency sub_set
+    counters = {}
     data_set.each do |transaction, items|
-      set.each do |set_items|
-        list[set_items.join(',')] ||= 0
-        list[set_items.join(',')] += 1 unless (items & set_items).empty?
+      sub_set.each do |sub_set_items|
+        counters[sub_set_items.join(',')] ||= 0
+        counters[sub_set_items.join(',')] += 1 if contains_all?(items, sub_set_items)
       end
     end
-    list
+    counters
   end
 
-  def retrieve_candidates list
-    list.reject!{|key, value| (value.to_f/data_set.count) * 100 < min_support}.keys
+  # dev note
+  # move to mixin / helper?
+  def contains_all? set, subset
+    (set & subset).count == subset.count
+  end
+
+  def retrieve_candidates new_list
+    new_list.reject{|key, value| (value.to_f/data_set.count) * 100 < min_support}.keys
   end
 
   def create_new_list candidates
-    @size += 1
-    candidates.combination(@size).to_a
+    self.iteration = self.iteration + 1
+    candidates.map{|c| c.split(',')}.flatten.uniq.combination(self.iteration).to_a
   end
 
   private
+  attr_writer :list, :matching_rules, :iteration
+  
   def convert_initial_data_set
     @data_set.values.flatten.uniq
   end
