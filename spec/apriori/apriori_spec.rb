@@ -114,11 +114,11 @@ describe Apriori do
     end
   end
 
-  context '#prune' do
-    it 'will remove elements thats dont have additional elements w/ the same prefix' do
-      apriori = Apriori.new(sample_data, 50)
-      array = ['Blah1,Blah2', 'Hi1,Hi2', 'Hi1,Hi3']
-      expect(apriori.prune(array)).to eql(['Hi1,Hi2','Hi1,Hi3'])
-    end
-  end
+  #context '#prune' do
+  #  it 'will remove elements thats dont have additional elements w/ the same prefix' do
+  #    apriori = Apriori.new(sample_data, 50)
+  #    array = ['Blah1,Blah2', 'Hi1,Hi2', 'Hi1,Hi3']
+  #    expect(apriori.prune(array)).to eql(['Hi1,Hi2','Hi1,Hi3'])
+  #  end
+  #end
 end

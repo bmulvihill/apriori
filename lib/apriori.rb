@@ -16,6 +16,7 @@ class Apriori
   # create a new list
   def mine(min_support=0, min_confidence=0)
     while !self.list.empty?
+      p self.list
       new_list = count_frequency(list)
       candidates = retrieve_candidates(new_list)
       self.list = create_new_list(candidates)
@@ -52,16 +53,31 @@ class Apriori
   # need to implement self join here
   def create_new_list candidates
     iterate
-    candidates = prune candidates if iteration > 2
-    candidates.map{|c| c.split(',')}.flatten.uniq.combination(iteration).to_a
+    #candidates = prune candidates if iteration > 2
+    #raise candidates.inspect if iteration > 2
+    #candidates = candidates.map{|c| c.split(',')}.flatten.uniq
+    make_combination candidates
   end
 
-  def prune candidates
-    c = candidates.map{|c| c.split(',')}
-    c = c.map{|candidate| candidate[0...-1]}.flatten #flatten array of pairs
-    c = c.inject(Hash.new(0)) {|item,count| item[count]+=1;item} # count occurances of each item
-    candidates.reject{|candidate| c[candidate.split(',')[0...-1].join(',')] < 2 } # removes those items with less than 2
+  def make_combination candidates
+    combos =
+      if iteration <= 2
+        #use built in combination
+        candidates.combination(iteration).to_a
+      else
+        # for sets greater than 3 use self join
+        array = candidates.map{|c1| c1.split(',')}
+        array = array.reject{|a1| array.select{|a2| a1[0...-1] == a2[0...-1]}.size == 1} #prune
+        array.map {|a1| array.select{|a2| a1[0...-1] == a2[0...-1]}.flatten.uniq}.uniq
+      end
   end
+
+  #def prune candidates
+  #  c = candidates.map{|c| c.split(',')}
+  #  c = c.map{|candidate| candidate[0...-1]}.flatten #flatten array of pairs
+  #  c = c.inject(Hash.new(0)) {|item,count| item[count]+=1;item} # count occurances of each item
+  #  candidates.reject{|candidate| c[candidate.split(',')[0...-1].join(',')] < 2 } # removes those items with less than 2
+  #end
 
   private
   attr_writer :list, :matching_rules
