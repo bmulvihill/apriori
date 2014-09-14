@@ -17,11 +17,11 @@ describe Apriori do
     end
   end
 
-  context '#association_rule' do
+  context '#confidence' do
     it 'will return a rule with support and confidence' do
       apriori = Apriori.new(sample_data,50)
-      sample_rule = {'Mango' => 'Keychain'}
-      expect(apriori.association_rule(sample_rule)).to eql({support: (3/5).to_f, confidence: 100})
+      sample_rule = {key: ['Eggs'], value: ['Onion', 'Keychain']}
+      expect(apriori.confidence(sample_rule)).to eql(75.0)
     end
   end
 

@@ -35,6 +35,7 @@ class Apriori
   end
 
   def confidence rule
+    support(rule[:key] + rule[:value]) / support(rule[:key]) * 100
   end
 
   def mine(min_support=0, min_confidence=0)
