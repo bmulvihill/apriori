@@ -1,5 +1,5 @@
 require 'factory_girl'
-Dir["./lib/*.rb"].each {|file| require file}
+require 'apriori'
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods

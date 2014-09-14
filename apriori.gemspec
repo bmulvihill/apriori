@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "apriori"
   spec.version       = Apriori::VERSION
   spec.authors       = ["Bryan Mulvihill"]
-  spec.email         = ["bmulvihill@pinsonault.com"]
+  spec.email         = ["mulvihill.bryan@gmail.com"]
   spec.summary       = %q{Ruby implementation of Apriori Algorithm}
   spec.description   = %q{TODO: Write a longer description. Optional.}
   spec.homepage      = ""
@@ -20,4 +20,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency 'rspec'
 end
