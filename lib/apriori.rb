@@ -12,16 +12,8 @@ class Apriori
     @frequent_sets ||= []
   end
 
-  def frequency_hash
-    @frequency_hash ||= {}
-  end
-
   def create_subsets set
     (1).upto(set.size - 1).flat_map { |n| set.combination(n).to_a }
-  end
-
-  def association_rule rule
-    #support =
   end
 
   def support item
@@ -54,7 +46,6 @@ class Apriori
     new_list.reject{|item| support(item) < min_support}.map{|item| item.join(',')}
   end
 
-  # dev note
   # i dont like this
   def iterate
     @iteration ||= 0
@@ -70,7 +61,7 @@ class Apriori
     if iteration <= 2
       candidates.combination(iteration).to_a
     else
-      array = self_join prune candidates.map{|c1| c1.split(',')}
+      self_join prune candidates.map{|c1| c1.split(',')}
     end
   end
 
