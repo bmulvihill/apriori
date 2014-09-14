@@ -1,12 +1,20 @@
 module Apriori
   class Algorithm
-    attr_reader :min_support, :min_confidence, :data_set, :list, :iteration
+    attr_reader :data_set, :list, :iteration
+    attr_accessor :min_support, :min_confidence
 
-    def initialize(data_set, min_support, min_confidence=0)
+    def initialize(data_set)
       @data_set = data_set
-      @min_support = min_support
-      @min_confidence = min_confidence
-      self.list = create_new_list(convert_initial_data_set)
+      @list = create_new_list(convert_initial_data_set)
+    end
+
+    def mine(min_support=0, min_confidence=0)
+      @min_support, @min_confidence = min_support, min_confidence
+      while !@list.empty?
+        candidates = retrieve_candidates(list)
+        frequent_sets << candidates
+        @list = create_new_list(candidates)
+      end
     end
 
     def frequent_sets
@@ -29,14 +37,6 @@ module Apriori
 
     def confidence set1, set2
       support(set1 + set2) / support(set1) * 100
-    end
-
-    def mine(min_support=0, min_confidence=0)
-      while !self.list.empty?
-        candidates = retrieve_candidates(list)
-        frequent_sets << candidates
-        self.list = create_new_list(candidates)
-      end
     end
 
     def contains_all? set, subset
@@ -75,7 +75,6 @@ module Apriori
     end
 
     private
-    attr_writer :list, :matching_rules
 
     def convert_initial_data_set
       @data_set.values.flatten.uniq
