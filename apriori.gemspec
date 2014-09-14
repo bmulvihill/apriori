@@ -9,7 +9,6 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Bryan Mulvihill"]
   spec.email         = ["mulvihill.bryan@gmail.com"]
   spec.summary       = %q{Ruby implementation of Apriori Algorithm}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
   spec.homepage      = ""
   spec.license       = "MIT"
 

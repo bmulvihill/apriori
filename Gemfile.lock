@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    apriori (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -13,6 +18,7 @@ GEM
     i18n (0.6.11)
     json (1.8.1)
     minitest (5.4.0)
+    rake (10.3.2)
     rspec (3.0.0)
       rspec-core (~> 3.0.0)
       rspec-expectations (~> 3.0.0)
@@ -33,5 +39,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  apriori!
+  bundler (~> 1.7)
   factory_girl
+  rake (~> 10.0)
   rspec
