@@ -9,58 +9,42 @@ describe Apriori do
       }
   end
 
+  context '#create_subsets' do
+    it 'returns all possible subsets of an array' do
+      apriori = Apriori.new(sample_data,50)
+      array = [1,2,3]
+      expect(apriori.create_subsets(array)).to eql([[1],[2],[3],[1,2],[1,3],[2,3]])
+    end
+  end
+
+  context '#association_rule' do
+    it 'will return a rule with support and confidence' do
+      apriori = Apriori.new(sample_data,50)
+      sample_rule = {'Mango' => 'Keychain'}
+      expect(apriori.association_rule(sample_rule)).to eql({support: (3/5).to_f, confidence: 100})
+    end
+  end
+
+  context '#support' do
+    it 'will return the support of an item' do
+      apriori = Apriori.new(sample_data,50)
+      item = ['Mango']
+      expect(apriori.support(item)).to eql((3.to_f/5) * 100)
+    end
+  end
+
+  context '#count_item_frequency' do
+    it 'will return the count of an item in the data set' do
+    apriori = Apriori.new(sample_data,50)
+    item = ['Mango']
+    expect(apriori.count_item_frequency(item)).to eql(3)
+    end
+  end
+
   context '#mine' do
     it 'returns all association rules meeting the minimum support and confidence' do
       apriori = Apriori.new(sample_data,50)
       apriori.mine
-    end
-  end
-
-  context '#count_frequency' do
-    it 'creates a hash of items and their count' do
-      apriori = Apriori.new(sample_data,10)
-      expect(apriori.count_frequency(apriori.list)).to eql({
-        'Mango' => 3,
-        'Onion' => 3,
-        'Nintendo' => 2,
-        'Keychain'=> 5,
-        'Eggs' => 4,
-        'Yoyo' => 3,
-        'Doll' => 1,
-        'Apple' => 1,
-        'Umbrella' => 1,
-        'Corn' => 2,
-        'Icecream' => 1
-        })
-    end
-
-    it 'will only count if all items are present in the transaction' do
-      apriori = Apriori.new(sample_data, 50)
-      list = [
-        ['Mango', 'Onion'],
-        ['Mango', 'Keychain'],
-        ['Mango', 'Eggs'],
-        ['Mango', 'Yoyo'],
-        ['Onion', 'Keychain'],
-        ['Onion', 'Eggs'],
-        ['Onion', 'Yoyo'],
-        ['Keychain', 'Eggs'],
-        ['Keychain', 'Yoyo'],
-        ['Eggs', 'Yoyo']
-        ]
-        counted_list = apriori.count_frequency(list)
-        expect(counted_list).to eql({
-          'Mango,Onion' => 1,
-          'Mango,Keychain' => 3,
-          'Mango,Eggs' => 2,
-          'Mango,Yoyo' => 2,
-          'Onion,Keychain' => 3,
-          'Onion,Eggs' => 3,
-          'Onion,Yoyo' => 2,
-          'Keychain,Eggs' => 4,
-          'Keychain,Yoyo' => 3,
-          'Eggs,Yoyo' => 2
-          })
     end
   end
 
@@ -83,8 +67,7 @@ describe Apriori do
   context '#retrieve_candidates' do
     it 'retrieves all candidates that meet minimum support' do
       apriori = Apriori.new(sample_data, 50)
-      list = apriori.count_frequency(apriori.list)
-      expect(apriori.retrieve_candidates(list)).to eql([
+      expect(apriori.retrieve_candidates(apriori.list)).to eql([
         'Mango',
         'Onion',
         'Keychain',
@@ -97,8 +80,7 @@ describe Apriori do
   context '#create_new_list' do
     it 'creates a new list of candidates' do
       apriori = Apriori.new(sample_data, 50)
-      list = apriori.count_frequency(apriori.list)
-      candidates = apriori.retrieve_candidates(list)
+      candidates = apriori.retrieve_candidates(apriori.list)
       expect(apriori.create_new_list(candidates)).to eql([
         ['Mango', 'Onion'],
         ['Mango', 'Keychain'],

@@ -1,5 +1,5 @@
 class Apriori
-  attr_reader :min_support, :min_confidence, :data_set, :list, :matching_rules, :iteration
+  attr_reader :min_support, :min_confidence, :data_set, :list, :iteration
 
   def initialize(data_set, min_support, min_confidence=0)
     @data_set = data_set
@@ -8,40 +8,49 @@ class Apriori
     self.list = create_new_list(convert_initial_data_set)
   end
 
-  # development notes
-  # loop until the list is empty
-  # count frequency of items in list
-  # get candiates, by determining if they meet minimum support
-  # add all matching candidates to possible association rules
-  # create a new list
+  def frequent_sets
+    @frequent_sets ||= []
+  end
+
+  def frequency_hash
+    @frequency_hash ||= {}
+  end
+
+  def create_subsets set
+    (1).upto(set.size - 1).flat_map { |n| set.combination(n).to_a }
+  end
+
+  def association_rule rule
+    #support =
+  end
+
+  def support item
+    (count_item_frequency(item).to_f / data_set.size) * 100
+  end
+
+  def count_item_frequency set
+    data_set.map do |transaction, items|
+      contains_all?(items, set)
+    end.reject {|item| item == false }.size
+  end
+
+  def confidence rule
+  end
+
   def mine(min_support=0, min_confidence=0)
     while !self.list.empty?
-      new_list = count_frequency(list)
-      candidates = retrieve_candidates(new_list)
+      candidates = retrieve_candidates(list)
+      frequent_sets << candidates
       self.list = create_new_list(candidates)
     end
   end
 
-  def count_frequency sub_set
-    counters = {}
-    data_set.each do |transaction, items|
-      sub_set.each do |sub_set_items|
-        counters[sub_set_items.join(',')] ||= 0
-        counters[sub_set_items.join(',')] += 1 if contains_all?(items, sub_set_items)
-      end
-    end
-    counters
-  end
-
-  # dev note
-  # move to mixin / helper?
   def contains_all? set, subset
-    (set & subset).count == subset.count
+    (set & subset).size == subset.size
   end
 
   def retrieve_candidates new_list
-    new_list = new_list.reject{|key, value| (value.to_f/data_set.count) * 100 < min_support}
-    new_list.keys
+    new_list.reject{|item| support(item) < min_support}.map{|item| item.join(',')}
   end
 
   # dev note
@@ -57,13 +66,11 @@ class Apriori
   end
 
   def make_combination candidates
-    combos =
-      if iteration <= 2
-        #use built in combination
-        candidates.combination(iteration).to_a
-      else
-        array = self_join prune candidates.map{|c1| c1.split(',')}
-      end
+    if iteration <= 2
+      candidates.combination(iteration).to_a
+    else
+      array = self_join prune candidates.map{|c1| c1.split(',')}
+    end
   end
 
   def self_join candidates
