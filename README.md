@@ -1,4 +1,4 @@
-Apriori's Algorithm
+Apriori Algorithm
 ===========
 http://en.wikipedia.org/wiki/Apriori_algorithm
 
@@ -12,4 +12,3 @@ git clone git@github.com:bmulvihill/apriori.git
 bundle install
 rspec spec
 ```
-
