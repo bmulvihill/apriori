@@ -17,17 +17,17 @@ class Apriori
   end
 
   def support item
-    (count_item_frequency(item).to_f / data_set.size) * 100
+    (count_frequency(item).to_f / data_set.size) * 100
   end
 
-  def count_item_frequency set
+  def count_frequency set
     data_set.map do |transaction, items|
       contains_all?(items, set)
     end.reject {|item| item == false }.size
   end
 
-  def confidence rule
-    support(rule[:key] + rule[:value]) / support(rule[:key]) * 100
+  def confidence set1, set2
+    support(set1 + set2) / support(set1) * 100
   end
 
   def mine(min_support=0, min_confidence=0)

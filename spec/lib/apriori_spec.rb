@@ -10,7 +10,7 @@ describe Apriori do
   end
 
   context '#create_subsets' do
-    it 'returns all possible subsets of an array' do
+    it 'returns all possible subsets of an array with size greater than 1' do
       apriori = Apriori.new(sample_data,50)
       array = [1,2,3]
       expect(apriori.create_subsets(array)).to eql([[1],[2],[3],[1,2],[1,3],[2,3]])
@@ -20,8 +20,9 @@ describe Apriori do
   context '#confidence' do
     it 'will return a rule with support and confidence' do
       apriori = Apriori.new(sample_data,50)
-      sample_rule = {key: ['Eggs'], value: ['Onion', 'Keychain']}
-      expect(apriori.confidence(sample_rule)).to eql(75.0)
+      set1 = ['Eggs']
+      set2 = ['Onion', 'Keychain']
+      expect(apriori.confidence(set1, set2)).to eql(75.0)
     end
   end
 
@@ -33,11 +34,11 @@ describe Apriori do
     end
   end
 
-  context '#count_item_frequency' do
-    it 'will return the count of an item in the data set' do
+  context '#count_frequency' do
+    it 'will return the frequency of an item in the data set' do
     apriori = Apriori.new(sample_data,50)
     item = ['Mango']
-    expect(apriori.count_item_frequency(item)).to eql(3)
+    expect(apriori.count_frequency(item)).to eql(3)
     end
   end
 
