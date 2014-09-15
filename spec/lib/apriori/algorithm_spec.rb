@@ -1,15 +1,6 @@
 describe Apriori::Algorithm do
-  let(:sample_data) do
-    {
-      t1: ['Mango', 'Onion', 'Nintendo', 'Keychain', 'Eggs', 'Yoyo'],
-      t2: ['Doll', 'Onion', 'Nintendo', 'Keychain', 'Eggs', 'Yoyo'],
-      t3: ['Mango', 'Apple', 'Keychain', 'Eggs'],
-      t4: ['Mango', 'Umbrella', 'Corn', 'Keychain', 'Yoyo'],
-      t5: ['Corn', 'Onion', 'Onion', 'Keychain', 'Icecream', 'Eggs']
-      }
-  end
   before do
-    @apriori =  Apriori::Algorithm.new(sample_data)
+    @apriori = FactoryGirl.build(:algorithm)
   end
 
   context '#mine' do
