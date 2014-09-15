@@ -12,7 +12,7 @@ module Apriori
       @min_support, @min_confidence = min_support, min_confidence
       while !@list.empty?
         candidates = retrieve_candidates(list)
-        frequent_sets << candidates
+        frequent_sets << candidates unless iteration == 1
         @list = create_new_list(candidates)
       end
     end
@@ -44,7 +44,7 @@ module Apriori
     end
 
     def retrieve_candidates new_list
-      new_list.reject{|item| support(item) < min_support}.map{|item| item.join(',')}
+      new_list.reject{|item| support(item) < min_support}#.map{|item| item.join(',')}
     end
 
     # i dont like this
@@ -60,9 +60,9 @@ module Apriori
 
     def make_combination candidates
       if iteration <= 2
-        candidates.combination(iteration).to_a
+        candidates.flatten.combination(iteration).to_a
       else
-        self_join prune candidates.map{|c1| c1.split(',')}
+        self_join prune candidates
       end
     end
 

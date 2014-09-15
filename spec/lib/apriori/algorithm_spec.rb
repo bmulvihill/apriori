@@ -1,4 +1,4 @@
-describe Apriori do
+describe Apriori::Algorithm do
   let(:sample_data) do
     {
       t1: ['Mango', 'Onion', 'Nintendo', 'Keychain', 'Eggs', 'Yoyo'],
@@ -65,11 +65,11 @@ describe Apriori do
     it 'retrieves all candidates that meet minimum support' do
       @apriori.min_support = 50
       expect(@apriori.retrieve_candidates(@apriori.list)).to eql([
-        'Mango',
-        'Onion',
-        'Keychain',
-        'Eggs',
-        'Yoyo'
+        ['Mango'],
+        ['Onion'],
+        ['Keychain'],
+        ['Eggs'],
+        ['Yoyo']
         ])
     end
   end
