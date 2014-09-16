@@ -3,20 +3,26 @@ require 'set'
 module Apriori
   class Algorithm
     attr_reader :data_set, :candidates, :iteration
-    attr_accessor :min_support, :min_confidence
+    attr_accessor :min_support, :min_confidence, :list
 
     def initialize(data_set)
       @data_set = data_set
-      @candidates = create_new_candidates(convert_initial_data_set)
+      @list = List.new(convert_initial_data_set, iterate)
+      @candidates = list.make_combination
     end
 
     def mine(min_support=0, min_confidence=0)
       @min_support, @min_confidence = min_support, min_confidence
       while !@candidates.empty?
-        list = retrieve_list(candidates)
+        @candidates = list.make_combination
+        @list = List.new(reject_candidates(candidates), iterate)
         frequent_sets << list unless iteration == 1
-        @candidates = create_new_candidates(list)
       end
+    end
+
+    def iterate
+      @iteration ||= 0
+      @iteration += 1
     end
 
     def frequent_sets
@@ -45,39 +51,11 @@ module Apriori
       set.to_set.superset? subset.to_set
     end
 
-    def retrieve_list list
-      list.reject{|item| support(item) < min_support}
-    end
-
-    # i dont like this
-    def iterate
-      @iteration ||= 0
-      @iteration += 1
-    end
-
-    def create_new_candidates list
-      iterate
-      make_combination list
-    end
-
-    def make_combination list
-      if iteration <= 2
-        list.flatten.combination(iteration).to_a
-      else
-        self_join prune list
-      end
-    end
-
-    def self_join list
-      list.map {|a1| list.select{|a2| a1[0...-1] == a2[0...-1]}.flatten.uniq}.uniq
-    end
-
-    def prune list
-      list.reject{|a1| list.select{|a2| a1[0...-1] == a2[0...-1]}.size == 1}
+    def reject_candidates candidates
+      candidates.reject{|item| support(item) < min_support}
     end
 
     private
-    #attr_accessor :list
 
     def convert_initial_data_set
       @data_set.values.flatten.uniq

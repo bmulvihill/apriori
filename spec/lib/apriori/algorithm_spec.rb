@@ -52,10 +52,10 @@ describe Apriori::Algorithm do
     end
   end
 
-  context '#retrieve_list' do
+  context '#reject_candidates' do
     it 'retrieves a list of candidates that meet minimum support' do
       @apriori.min_support = 50
-      expect(@apriori.retrieve_list(@apriori.candidates)).to eql([
+      expect(@apriori.reject_candidates(@apriori.candidates)).to eql([
         ['Mango'],
         ['Onion'],
         ['Keychain'],
@@ -65,51 +65,4 @@ describe Apriori::Algorithm do
     end
   end
 
-  context '#create_new_candidates' do
-    it 'creates a new list of candidates' do
-      @apriori.min_support = 50
-      list = @apriori.retrieve_list(@apriori.candidates)
-      expect(@apriori.create_new_candidates(list)).to eql([
-        ['Mango', 'Onion'],
-        ['Mango', 'Keychain'],
-        ['Mango', 'Eggs'],
-        ['Mango', 'Yoyo'],
-        ['Onion', 'Keychain'],
-        ['Onion', 'Eggs'],
-        ['Onion', 'Yoyo'],
-        ['Keychain', 'Eggs'],
-        ['Keychain', 'Yoyo'],
-        ['Eggs', 'Yoyo']
-        ])
-    end
-  end
-
-  context '#make_combination' do
-    it 'will return all combinations for first two iterations' do
-      @apriori.iterate
-      array =['Hi1','Hi2','Hi3']
-      expect(@apriori.make_combination(array)).to eql([['Hi1','Hi2'],['Hi1','Hi3'],['Hi2','Hi3']])
-    end
-
-    it 'will return the self join after the first two iterations' do
-      @apriori.iterate
-      @apriori.iterate
-      array = [['Hi1','Hi2'], ['Hi1','Hi3'], ['Blah1', 'Blah2'], ['Blah1', 'Blah3']]
-      expect(@apriori.self_join(array)).to eql([['Hi1','Hi2','Hi3'],['Blah1','Blah2','Blah3']])
-    end
-  end
-
-  context '#prune' do
-    it 'will remove elements thats dont have additional elements w/ the same prefix' do
-      array = ['Blah1,Blah2', 'Hi1,Hi2', 'Hi1,Hi3']
-      expect(@apriori.prune(array)).to eql(['Hi1,Hi2','Hi1,Hi3'])
-    end
-  end
-
-  context '#self_join' do
-    it 'will join elements on all but last item' do
-      array = [['Hi1','Hi2'], ['Hi1','Hi3'], ['Blah1', 'Blah2'], ['Blah1', 'Blah3']]
-      expect(@apriori.self_join(array)).to eql([['Hi1','Hi2','Hi3'],['Blah1','Blah2','Blah3']])
-    end
-  end
 end
