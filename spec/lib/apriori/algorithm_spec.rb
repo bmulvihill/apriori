@@ -52,10 +52,10 @@ describe Apriori::Algorithm do
     end
   end
 
-  context '#retrieve_candidates' do
-    it 'retrieves all candidates that meet minimum support' do
+  context '#retrieve_list' do
+    it 'retrieves a list of candidates that meet minimum support' do
       @apriori.min_support = 50
-      expect(@apriori.retrieve_candidates(@apriori.list)).to eql([
+      expect(@apriori.retrieve_list(@apriori.candidates)).to eql([
         ['Mango'],
         ['Onion'],
         ['Keychain'],
@@ -65,11 +65,11 @@ describe Apriori::Algorithm do
     end
   end
 
-  context '#create_new_list' do
+  context '#create_new_candidates' do
     it 'creates a new list of candidates' do
       @apriori.min_support = 50
-      candidates = @apriori.retrieve_candidates(@apriori.list)
-      expect(@apriori.create_new_list(candidates)).to eql([
+      list = @apriori.retrieve_list(@apriori.candidates)
+      expect(@apriori.create_new_candidates(list)).to eql([
         ['Mango', 'Onion'],
         ['Mango', 'Keychain'],
         ['Mango', 'Eggs'],

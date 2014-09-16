@@ -1,19 +1,21 @@
+require 'set'
+
 module Apriori
   class Algorithm
-    attr_reader :data_set, :list, :iteration
+    attr_reader :data_set, :candidates, :iteration
     attr_accessor :min_support, :min_confidence
 
     def initialize(data_set)
       @data_set = data_set
-      @list = create_new_list(convert_initial_data_set)
+      @candidates = create_new_candidates(convert_initial_data_set)
     end
 
     def mine(min_support=0, min_confidence=0)
       @min_support, @min_confidence = min_support, min_confidence
-      while !@list.empty?
-        candidates = retrieve_candidates(list)
-        frequent_sets << candidates unless iteration == 1
-        @list = create_new_list(candidates)
+      while !@candidates.empty?
+        list = retrieve_list(candidates)
+        frequent_sets << list unless iteration == 1
+        @candidates = create_new_candidates(list)
       end
     end
 
@@ -40,11 +42,11 @@ module Apriori
     end
 
     def contains_all? set, subset
-      (set & subset).size == subset.size
+      set.to_set.superset? subset.to_set
     end
 
-    def retrieve_candidates new_list
-      new_list.reject{|item| support(item) < min_support}#.map{|item| item.join(',')}
+    def retrieve_list list
+      list.reject{|item| support(item) < min_support}
     end
 
     # i dont like this
@@ -53,28 +55,29 @@ module Apriori
       @iteration += 1
     end
 
-    def create_new_list candidates
+    def create_new_candidates list
       iterate
-      make_combination candidates
+      make_combination list
     end
 
-    def make_combination candidates
+    def make_combination list
       if iteration <= 2
-        candidates.flatten.combination(iteration).to_a
+        list.flatten.combination(iteration).to_a
       else
-        self_join prune candidates
+        self_join prune list
       end
     end
 
-    def self_join candidates
-      candidates.map {|a1| candidates.select{|a2| a1[0...-1] == a2[0...-1]}.flatten.uniq}.uniq
+    def self_join list
+      list.map {|a1| list.select{|a2| a1[0...-1] == a2[0...-1]}.flatten.uniq}.uniq
     end
 
-    def prune candidates
-      candidates.reject{|a1| candidates.select{|a2| a1[0...-1] == a2[0...-1]}.size == 1}
+    def prune list
+      list.reject{|a1| list.select{|a2| a1[0...-1] == a2[0...-1]}.size == 1}
     end
 
     private
+    #attr_accessor :list
 
     def convert_initial_data_set
       @data_set.values.flatten.uniq
