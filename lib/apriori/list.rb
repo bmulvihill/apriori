@@ -7,7 +7,7 @@ module Apriori
       @iteration = iteration
     end
 
-    def make_combination
+    def make_candidates
       if iteration <= 2
         list.flatten.combination(iteration).to_a
       else
@@ -15,6 +15,10 @@ module Apriori
       end
     end
 
+    def create_subsets set
+      (1).upto(set.size - 1).flat_map { |n| set.combination(n).to_a }
+    end
+    
     private
 
     def self_join list
