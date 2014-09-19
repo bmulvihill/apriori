@@ -19,6 +19,26 @@ describe Apriori::ItemSet do
     end
   end
 
+  context '#create_association_rules' do
+    it 'creates association rules for all combinations' do
+      frequent_item_set = [Apriori::List.new([['Onion'],['Keychain'],['Eggs']],1)]
+      expect(@item_set.create_association_rules(frequent_item_set)).to eql({"Onion=>Keychain,Eggs"=>{:confidence=>100.0}, "Keychain=>Onion,Eggs"=>{:confidence=>60.0}, "Eggs=>Onion,Keychain"=>{:confidence=>75.0}, "Onion,Keychain=>Eggs"=>{:confidence=>100.0}, "Onion,Eggs=>Keychain"=>{:confidence=>100.0}, "Keychain,Eggs=>Onion"=>{:confidence=>75.0}})
+    end
+  end
+
+  context '#reject_candidates' do
+    it 'retrieves a list of candidates that meet minimum support' do
+      @apriori = FactoryGirl.build(:algorithm)
+      expect(@item_set.reject_candidates(@apriori.candidates, 50)).to eql([
+        ['Mango'],
+        ['Onion'],
+        ['Keychain'],
+        ['Eggs'],
+        ['Yoyo']
+        ])
+    end
+  end
+
   context '#count_frequency' do
     it 'will return the frequency of an item in the data set' do
     item = ['Mango']
