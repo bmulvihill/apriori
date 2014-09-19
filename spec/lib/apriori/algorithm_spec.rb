@@ -22,4 +22,10 @@ describe Apriori::Algorithm do
     end
   end
 
+  context '#create_association_rules' do
+    it 'creates association rules for all combinations' do
+      frequent_item_set = [Apriori::List.new([['Onion'],['Keychain'],['Eggs']],1)]
+      expect(@apriori.create_association_rules(frequent_item_set)).to eql({"Onion=>Keychain,Eggs"=>{:confidence=>100.0}, "Keychain=>Onion,Eggs"=>{:confidence=>60.0}, "Eggs=>Onion,Keychain"=>{:confidence=>75.0}, "Onion,Keychain=>Eggs"=>{:confidence=>100.0}, "Onion,Eggs=>Keychain"=>{:confidence=>100.0}, "Keychain,Eggs=>Onion"=>{:confidence=>75.0}})
+    end
+  end
 end

@@ -20,10 +20,10 @@ describe Apriori::List do
   end
 
   context '#create_subsets' do
-    it 'returns all possible subsets of an array' do    
+    it 'returns all possible subsets of an array' do
       array = [1,2,3]
       @list = Apriori::List.new(array,3)
-      expect(@list.create_subsets(array)).to eql([[1],[2],[3],[1,2],[1,3],[2,3]])
+      expect(@list.create_subsets).to eql([[1],[2],[3],[1,2],[1,3],[2,3]])
     end
   end
 end

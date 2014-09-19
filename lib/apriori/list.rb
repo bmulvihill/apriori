@@ -15,10 +15,10 @@ module Apriori
       end
     end
 
-    def create_subsets set
-      (1).upto(set.size - 1).flat_map { |n| set.combination(n).to_a }
+    def create_subsets
+      (1).upto(list.size - 1).flat_map { |n| list.combination(n).to_a }
     end
-    
+
     private
 
     def self_join list
