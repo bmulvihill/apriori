@@ -21,21 +21,9 @@ describe Apriori::ItemSet do
 
   context '#create_association_rules' do
     it 'creates association rules for all combinations' do
-      frequent_item_set = [Apriori::List.new([['Onion'],['Keychain'],['Eggs']],1)]
-      expect(@item_set.create_association_rules(frequent_item_set)).to eql({"Onion=>Keychain,Eggs"=>{:confidence=>100.0}, "Keychain=>Onion,Eggs"=>{:confidence=>60.0}, "Eggs=>Onion,Keychain"=>{:confidence=>75.0}, "Onion,Keychain=>Eggs"=>{:confidence=>100.0}, "Onion,Eggs=>Keychain"=>{:confidence=>100.0}, "Keychain,Eggs=>Onion"=>{:confidence=>75.0}})
-    end
-  end
-
-  context '#reject_candidates' do
-    it 'retrieves a list of candidates that meet minimum support' do
-      @apriori = FactoryGirl.build(:algorithm)
-      expect(@item_set.reject_candidates(@apriori.candidates, 50)).to eql([
-        ['Mango'],
-        ['Onion'],
-        ['Keychain'],
-        ['Eggs'],
-        ['Yoyo']
-        ])
+      @set = Apriori::ItemSet.new({:t1 => ['1','2','3'], :t2 => ['1','2','4'], :t3 => ['1','4','5']})
+      @set.create_frequent_item_sets(60)
+      expect(@set.create_association_rules(50, 0)).to eql({"1=>2"=>{:confidence=>66.66666666666666}, "2=>1"=>{:confidence=>100.0}, "1=>4"=>{:confidence=>66.66666666666666}, "4=>1"=>{:confidence=>100.0}})
     end
   end
 

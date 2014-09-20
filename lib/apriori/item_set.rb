@@ -1,9 +1,37 @@
 module Apriori
   class ItemSet
-    attr_reader :data_set
+    attr_reader :data_set, :item_set, :candidates, :iteration, :min_support
 
     def initialize(data_set)
       @data_set = data_set
+    end
+
+    def frequent_item_sets
+      @frequent_item_sets ||= []
+    end
+
+    def create_frequent_item_sets min_support
+      @min_support = min_support
+      @candidates = convert_initial_data_set
+      while @candidates.any?
+        iterate
+        @candidates = list.make_candidates
+        frequent_item_sets << list unless iteration == 1
+      end
+    end
+
+    def create_association_rules min_support, min_confidence
+      rules ={}
+      frequent_item_sets.each do |freq_list|
+        freq_list.create_subsets.each do |sub_set|
+          sub_set.each do |combo|
+            rule_name = "#{combo.join(',')}=>#{(sub_set.flatten - combo.flatten).join(',')}"
+            rules[rule_name] = {}
+            rules[rule_name][:confidence] = confidence(combo.flatten, (sub_set.flatten - combo.flatten))
+          end
+        end
+      end
+      rules
     end
 
     def support item
@@ -11,22 +39,7 @@ module Apriori
     end
 
     def confidence set1, set2
-      support(set1 + set2) / support(set1) * 100
-    end
-
-    def create_association_rules frequent_item_sets
-      rules = {}
-      frequent_item_sets.each do |freq_list|
-        freq_list.create_subsets.each do |sub_set|
-          rules["#{sub_set.flatten.join(',')}=>#{(freq_list.list - sub_set).flatten.join(',')}"] = {}
-          rules["#{sub_set.flatten.join(',')}=>#{(freq_list.list - sub_set).flatten.join(',')}"][:confidence] = confidence(sub_set.flatten, (freq_list.list - sub_set).flatten)
-        end
-      end
-      rules
-    end
-
-    def reject_candidates candidates, min_support
-      candidates.reject{|item| support(item) < min_support}
+      (support(set1 + set2) / support(set1)) * 100
     end
 
     def count_frequency set
@@ -39,5 +52,24 @@ module Apriori
       set.to_set.superset? subset.to_set
     end
 
+    private
+
+    def iterate
+      @iteration ||= 0
+      @iteration += 1
+    end
+
+    def list
+      @list ||= {}
+      @list[iteration] ||= List.new(reject_candidates, iteration)
+    end
+
+    def reject_candidates
+      candidates.reject{|item| support(item) < min_support}
+    end
+
+    def convert_initial_data_set
+      @data_set.values.flatten.uniq.map{|item| [item]}
+    end
   end
 end
