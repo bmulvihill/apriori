@@ -12,5 +12,5 @@ gem install apriori-ruby
 ```
 Or add to Gemfile
 ```ruby
-gem 'apriori-ruby
+gem 'apriori-ruby'
 ```
