@@ -23,13 +23,13 @@ describe Apriori::List do
     it 'returns nothing if the subset size is 1' do
       array = [[1],[2],[3]]
       @list = Apriori::List.new(array,3)
-      expect(@list.create_subsets).to eql([[],[],[]])
+      expect(@list.create_subsets([1])).to eql([])
     end
 
     it 'returns all possible subsets of an array' do
       array = [[1,2,3]]
       @list = Apriori::List.new(array,3)
-      expect(@list.create_subsets).to eql([[[1],[2],[3],[1,2],[1,3],[2,3]]])
+      expect(@list.create_subsets([1,2,3])).to eql([[1],[2],[3],[1,2],[1,3],[2,3]])
     end
   end
 end

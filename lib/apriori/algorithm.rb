@@ -1,5 +1,3 @@
-require 'set'
-
 module Apriori
   class Algorithm
     attr_accessor :min_support, :min_confidence, :item_set

@@ -15,12 +15,8 @@ module Apriori
       end
     end
 
-    def create_subsets
-      subsets=[]
-      list.each do |l|
-        subsets << (1).upto(l.size - 1).flat_map { |n| l.combination(n).to_a }
-      end
-      subsets
+    def create_subsets l
+      (1).upto(l.size - 1).flat_map { |n| l.combination(n).to_a }
     end
 
     private
