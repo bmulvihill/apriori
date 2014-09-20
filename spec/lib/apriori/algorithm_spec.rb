@@ -8,4 +8,5 @@ describe Apriori::Algorithm do
       @apriori.mine(50)
     end
   end
+
 end
