@@ -4,12 +4,12 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'apriori/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "apriori"
+  spec.name          = "apriori-ruby"
   spec.version       = Apriori::VERSION
   spec.authors       = ["Bryan Mulvihill"]
   spec.email         = ["mulvihill.bryan@gmail.com"]
   spec.summary       = %q{Ruby implementation of Apriori Algorithm}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/bmulvihill/apriori"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
