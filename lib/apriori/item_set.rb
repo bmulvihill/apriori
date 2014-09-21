@@ -12,12 +12,14 @@ module Apriori
 
     def create_frequent_item_sets min_support
       @min_support = min_support
+      @iteration = 0
       @candidates = convert_initial_data_set
       while candidates.any?
-        iterate
+        @iteration += 1
         @candidates = list.make_candidates
         frequent_item_sets << list unless iteration == 1
       end
+      frequent_item_sets
     end
 
     def create_association_rules min_confidence
@@ -52,11 +54,6 @@ module Apriori
     end
 
     private
-
-    def iterate
-      @iteration ||= 0
-      @iteration += 1
-    end
 
     def list
       @list ||= {}
