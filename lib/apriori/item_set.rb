@@ -1,6 +1,6 @@
 module Apriori
   class ItemSet
-    attr_reader :data_set, :item_set, :candidates, :iteration, :min_support
+    attr_reader :data_set, :item_set, :candidates, :iteration, :min_support, :min_confidence
 
     def initialize(data_set)
       @data_set = data_set
@@ -8,12 +8,13 @@ module Apriori
 
     def frequent_item_sets
       @frequent_item_sets ||= []
+      @frequent_item_sets ||= create_frequent_item_sets(min_support)
     end
 
     def create_frequent_item_sets min_support
       @min_support = min_support
       @candidates = convert_initial_data_set
-      while @candidates.any?
+      while candidates.any?
         iterate
         @candidates = list.make_candidates
         frequent_item_sets << list unless iteration == 1
@@ -21,6 +22,7 @@ module Apriori
     end
 
     def create_association_rules min_support, min_confidence
+      @min_support, @min_confidence = min_support, min_confidence
       rules ={}
       frequent_item_sets.each do |freq_lists|
         freq_lists.sets.each do |set|

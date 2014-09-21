@@ -6,7 +6,7 @@ FactoryGirl.define do
   factory :item_set, class: Apriori::ItemSet do
     initialize_with {new(FactoryGirl.build(:sample_data))}
   end
-  
+
   factory :sample_data, class: Hash do
     t1 ['Mango', 'Onion', 'Nintendo', 'Keychain', 'Eggs', 'Yoyo']
     t2 ['Doll', 'Onion', 'Nintendo', 'Keychain', 'Eggs', 'Yoyo']
