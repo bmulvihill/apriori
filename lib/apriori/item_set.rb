@@ -23,15 +23,14 @@ module Apriori
     def create_association_rules min_support, min_confidence
       rules ={}
       frequent_item_sets.each do |freq_lists|
-        freq_lists.list.each do |freq_list|
-          freq_lists.create_subsets(freq_list).each do |combo|
-            rule_name = "#{combo.join(',')}=>#{(freq_list.flatten - combo.flatten).join(',')}"
-            rules[rule_name] = {}
-            rules[rule_name][:confidence] = confidence(combo.flatten, (freq_list.flatten - combo.flatten))
+        freq_lists.sets.each do |set|
+          List.create_subsets(set).each do |combo|
+            rule_name = "#{combo.join(',')}=>#{(set.flatten - combo.flatten).join(',')}"
+            rules[rule_name] = confidence(combo.flatten, (set.flatten - combo.flatten))
           end
         end
       end
-      rules
+      rules.select{|k,v| v >= min_confidence}
     end
 
     def support item

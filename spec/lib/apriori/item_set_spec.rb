@@ -23,7 +23,7 @@ describe Apriori::ItemSet do
     it 'creates association rules for all combinations' do
       @set = Apriori::ItemSet.new({:t1 => ['1','2','3'], :t2 => ['1','2','4'], :t3 => ['1','4','5']})
       @set.create_frequent_item_sets(60)
-      expect(@set.create_association_rules(50, 0)).to eql({"1=>2"=>{:confidence=>66.66666666666666}, "2=>1"=>{:confidence=>100.0}, "1=>4"=>{:confidence=>66.66666666666666}, "4=>1"=>{:confidence=>100.0}})
+      expect(@set.create_association_rules(50, 0)).to eql({"1=>2"=>66.66666666666666, "2=>1"=>100.0, "1=>4"=>66.66666666666666, "4=>1"=>100.0})
     end
   end
 
