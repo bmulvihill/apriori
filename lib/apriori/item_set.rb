@@ -8,7 +8,6 @@ module Apriori
 
     def frequent_item_sets
       @frequent_item_sets ||= []
-      @frequent_item_sets ||= create_frequent_item_sets(min_support)
     end
 
     def create_frequent_item_sets min_support
@@ -21,8 +20,7 @@ module Apriori
       end
     end
 
-    def create_association_rules min_support, min_confidence
-      @min_support, @min_confidence = min_support, min_confidence
+    def create_association_rules min_confidence
       rules ={}
       frequent_item_sets.each do |freq_lists|
         freq_lists.sets.each do |set|

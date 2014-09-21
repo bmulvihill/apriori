@@ -9,7 +9,7 @@ module Apriori
     def mine(min_support=0, min_confidence=0)
       @min_support, @min_confidence = min_support, min_confidence
       item_set.create_frequent_item_sets(min_support)
-      item_set.create_association_rules(min_support, min_confidence)
+      item_set.create_association_rules(min_confidence)
     end
 
   end
