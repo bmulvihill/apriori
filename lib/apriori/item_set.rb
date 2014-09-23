@@ -1,19 +1,14 @@
 module Apriori
   class ItemSet
-    attr_reader :data_set, :item_set, :candidates, :iteration, :min_support, :min_confidence
+    attr_reader :data_set, :iteration, :min_support, :min_confidence
 
     def initialize(data_set)
       @data_set = data_set
     end
 
-    def frequent_item_sets
-      @frequent_item_sets ||= []
-    end
-
     def create_frequent_item_sets min_support
       @min_support = min_support
       @iteration = 0
-      @candidates = convert_initial_data_set
       while candidates.any?
         @iteration += 1
         @candidates = list.make_candidates
@@ -55,11 +50,19 @@ module Apriori
 
     private
 
+    def candidates
+      @candidates ||= convert_initial_data_set
+    end
+
     def list
       @list ||= {}
       @list[iteration] ||= List.new(reject_candidates, iteration)
     end
 
+    def frequent_item_sets
+      @frequent_item_sets ||= []
+    end
+    
     def reject_candidates
       candidates.reject{|item| support(item) < min_support}
     end

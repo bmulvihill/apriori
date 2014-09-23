@@ -6,7 +6,7 @@ module Apriori
       @sets = sets
       @iteration = iteration
     end
-    
+
     def self.create_subsets set
       (1).upto(set.size - 1).flat_map { |n| set.combination(n).to_a }
     end
