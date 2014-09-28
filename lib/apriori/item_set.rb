@@ -14,7 +14,6 @@ module Apriori
 
     def create_frequent_item_sets min_support
       @min_support = min_support
-      @candidates = initial_data_set
       make_item_sets unless frequent_item_sets.any?
       frequent_item_sets
     end
@@ -52,6 +51,7 @@ module Apriori
     private
 
     def make_item_sets
+      @candidates = initial_data_set
       iteration = 0
       while candidates.any?
         iteration += 1
