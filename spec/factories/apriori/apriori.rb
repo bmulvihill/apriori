@@ -1,8 +1,4 @@
 FactoryGirl.define do
-  factory :algorithm, class: Apriori::Algorithm do
-    initialize_with {new(FactoryGirl.build(:item_set))}
-  end
-
   factory :item_set, class: Apriori::ItemSet do
     initialize_with {new(FactoryGirl.build(:sample_data))}
   end

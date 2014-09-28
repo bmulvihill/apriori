@@ -6,6 +6,12 @@ module Apriori
       @data_set = data_set
     end
 
+    def mine(min_support=0, min_confidence=0)
+      @min_support, @min_confidence = min_support, min_confidence
+      create_frequent_item_sets(min_support)
+      create_association_rules(min_confidence)
+    end
+
     def create_frequent_item_sets min_support
       @min_support = min_support
       @iteration = 0
@@ -13,21 +19,20 @@ module Apriori
         @iteration += 1
         @candidates = list.make_candidates
         frequent_item_sets << list unless iteration == 1
-      end
+      end unless frequent_item_sets.any?
       frequent_item_sets
     end
 
     def create_association_rules min_confidence
-      rules ={}
       frequent_item_sets.each do |freq_lists|
         freq_lists.sets.each do |set|
           List.create_subsets(set).each do |combo|
             rule_name = "#{combo.join(',')}=>#{(set.flatten - combo.flatten).join(',')}"
-            rules[rule_name] = confidence(combo.flatten, (set.flatten - combo.flatten))
+            association_rules[rule_name] ||= confidence(combo.flatten, (set.flatten - combo.flatten))
           end
         end
       end
-      rules.select{|k,v| v >= min_confidence}
+      association_rules.select{|name, confidence| confidence >= min_confidence}
     end
 
     def support item
@@ -59,10 +64,15 @@ module Apriori
       @list[iteration] ||= List.new(reject_candidates, iteration)
     end
 
-    def frequent_item_sets
-      @frequent_item_sets ||= []
+    def association_rules
+      @association_rules ||= {}
     end
-    
+
+    def frequent_item_sets
+      @frequent_item_sets ||= {}
+      @frequent_item_sets[min_support] ||= []
+    end
+
     def reject_candidates
       candidates.reject{|item| support(item) < min_support}
     end
