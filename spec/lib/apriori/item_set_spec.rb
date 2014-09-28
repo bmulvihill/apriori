@@ -4,6 +4,12 @@ describe Apriori::ItemSet do
     @item_set = Apriori::ItemSet.new(data)
   end
 
+  context '#mine' do
+    it 'returns all association rules meeting the minimum support and confidence' do
+      expect(@item_set.mine(50,90)).to eql({"Mango=>Keychain"=>100.0, "Onion=>Keychain"=>100.0, "Onion=>Eggs"=>100.0, "Eggs=>Keychain"=>100.0, "Yoyo=>Keychain"=>100.0, "Onion=>Keychain,Eggs"=>100.0, "Onion,Keychain=>Eggs"=>100.0, "Onion,Eggs=>Keychain"=>100.0})
+    end
+  end
+
   context '#confidence' do
     it 'will return a rule with support and confidence' do
       set1 = ['Eggs']
