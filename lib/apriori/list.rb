@@ -1,10 +1,10 @@
 module Apriori
   class List
-    attr_reader :sets, :iteration
+    attr_reader :sets, :set_size
 
-    def initialize sets, iteration
+    def initialize sets, set_size
       @sets = sets
-      @iteration = iteration
+      @set_size = set_size
     end
 
     def self.create_subsets set
@@ -12,8 +12,8 @@ module Apriori
     end
 
     def make_candidates
-      if iteration <= 2
-        sets.flatten.combination(iteration).to_a
+      if set_size <= 2
+        sets.flatten.combination(set_size).to_a
       else
         self_join prune
       end
