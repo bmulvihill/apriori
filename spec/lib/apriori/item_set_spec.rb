@@ -31,6 +31,13 @@ describe Apriori::ItemSet do
     end
   end
 
+  context '#create_frequent_item_sets' do
+    it 'creates frequent item sets for a given support' do
+      @set = Apriori::ItemSet.new({:t1 => ['1','2','3'], :t2 => ['1','2','4'], :t3 => ['1','4','5']})
+      expect(@set.create_frequent_item_sets(60).first.sets).to eql([['1'],['2'],['4']])
+    end
+  end
+
   context '#create_association_rules' do
     it 'creates association rules for all combinations' do
       @set = Apriori::ItemSet.new({:t1 => ['1','2','3'], :t2 => ['1','2','4'], :t3 => ['1','4','5']})
@@ -46,17 +53,4 @@ describe Apriori::ItemSet do
     end
   end
 
-  context '#contains_all?' do
-    it 'will return true if one array contains all elements of sub set' do
-      set = [1,2,3]
-      subset = [2,1]
-      expect(@item_set.contains_all?(set, subset)).to be true
-    end
-
-    it 'will return false if one array does not contain all the elements of a sub set' do
-      set = [1,2,3,4]
-      subset = [2,1,5]
-      expect(@item_set.contains_all?(set, subset)).to be false
-    end
-  end
 end

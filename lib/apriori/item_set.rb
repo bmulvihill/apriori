@@ -1,6 +1,6 @@
 module Apriori
   class ItemSet
-    attr_reader :data_set, :min_support, :min_confidence, :candidates
+    attr_reader :data_set, :min_support, :min_confidence
 
     def initialize(data_set)
       @data_set = data_set
@@ -19,14 +19,7 @@ module Apriori
     end
 
     def create_association_rules min_confidence
-      frequent_item_sets.each do |freq_lists|
-        freq_lists.sets.each do |set|
-          List.create_subsets(set).each do |combo|
-            rule_name = "#{combo.join(',')}=>#{(set.flatten - combo.flatten).join(',')}"
-            association_rules[rule_name] ||= confidence(combo.flatten, (set.flatten - combo.flatten))
-          end
-        end
-      end
+      make_association_rules unless frequent_item_sets.empty?
       association_rules.select{|name, confidence| confidence >= min_confidence}
     end
 
@@ -44,11 +37,8 @@ module Apriori
       end.reject {|item| item == false }.size
     end
 
-    def contains_all? set, subset
-      set.to_set.superset? subset.to_set
-    end
-
     private
+    attr_reader :candidates
 
     def make_item_sets
       @candidates = initial_data_set
@@ -61,6 +51,17 @@ module Apriori
       end
     end
 
+    def make_association_rules
+      frequent_item_sets.each do |freq_lists|
+        freq_lists.sets.each do |set|
+          List.create_subsets(set).each do |combo|
+            rule_name = "#{combo.join(',')}=>#{(set.flatten - combo.flatten).join(',')}"
+            association_rules[rule_name] ||= confidence(combo.flatten, (set.flatten - combo.flatten))
+          end
+        end
+      end
+    end
+
     def association_rules
       @association_rules ||= {}
     end
@@ -68,6 +69,10 @@ module Apriori
     def frequent_item_sets
       @frequent_item_sets ||= {}
       @frequent_item_sets[min_support] ||= []
+    end
+
+    def contains_all? set, subset
+      set.to_set.superset? subset.to_set
     end
 
     def reject_candidates
