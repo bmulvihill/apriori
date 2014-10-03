@@ -1,9 +1,10 @@
 module Apriori
   class List
-    attr_reader :sets
+    attr_reader :sets, :set_size
 
-    def initialize sets
+    def initialize sets, set_size
       @sets = sets
+      @set_size = set_size
     end
 
     def self.create_subsets set
@@ -11,22 +12,14 @@ module Apriori
     end
 
     def make_candidates
-      if candidate_size <= 2
-        sets.flatten.combination(candidate_size).to_a
+      if set_size <= 2
+        sets.flatten.combination(set_size).to_a
       else
         self_join prune
       end
     end
 
     private
-
-    def candidate_size
-      if sets.first.is_a?(Array)
-        sets.first.size + 1
-      else
-        0
-      end
-    end
 
     def self_join set
       set.map{|a1| set.select{|a2| a1[0...-1] == a2[0...-1]}.flatten.uniq}.uniq

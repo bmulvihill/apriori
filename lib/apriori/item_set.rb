@@ -42,13 +42,15 @@ module Apriori
 
     def make_item_sets
       @candidates = initial_data_set
+      iteration = 0
       while candidates.any?
-        list = List.new(reject_candidates)
-        frequent_item_sets << list
+        iteration += 1
+        list = List.new(reject_candidates, iteration)
+        frequent_item_sets << list unless iteration == 1
         @candidates = list.make_candidates
       end
     end
-    
+
     def make_association_rules
       frequent_item_sets.each do |freq_lists|
         freq_lists.sets.each do |set|
