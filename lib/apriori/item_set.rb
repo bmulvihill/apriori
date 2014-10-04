@@ -20,7 +20,7 @@ module Apriori
 
     def create_association_rules min_confidence
       make_association_rules unless frequent_item_sets.empty?
-      association_rules.select{|name, confidence| confidence >= min_confidence}
+      association_rules.select{ |name, confidence| confidence >= min_confidence }
     end
 
     def support item
@@ -42,11 +42,9 @@ module Apriori
 
     def make_item_sets
       @candidates = initial_data_set
-      iteration = 0
       while candidates.any?
-        iteration += 1
-        list = List.new(reject_candidates, iteration)
-        frequent_item_sets << list unless iteration == 1
+        list = List.new(reject_candidates)
+        frequent_item_sets << list
         @candidates = list.make_candidates
       end
     end
@@ -64,6 +62,7 @@ module Apriori
 
     def association_rules
       @association_rules ||= {}
+      @association_rules[min_support] ||= {}
     end
 
     def frequent_item_sets

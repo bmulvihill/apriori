@@ -1,21 +1,25 @@
 module Apriori
   class List
-    attr_reader :sets, :set_size
-
-    def initialize sets, set_size
-      @sets = sets
-      @set_size = set_size
-    end
+    attr_reader :sets
 
     def self.create_subsets set
       (1).upto(set.size - 1).flat_map { |n| set.combination(n).to_a }
     end
+    
+    def initialize sets
+      @sets = sets
+    end
+
+    def size
+      return 0 if sets.empty?
+      sets.first.size
+    end
 
     def make_candidates
-      if set_size <= 2
-        sets.flatten.combination(set_size).to_a
+      if (size + 1) <= 2
+        sets.flatten.combination(size + 1).to_a
       else
-        self_join prune
+        self_join(prune)
       end
     end
 
