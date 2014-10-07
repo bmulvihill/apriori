@@ -27,7 +27,7 @@ module Apriori
     # creates all association rules in the data set based on given confidence
     def create_association_rules min_confidence
       make_association_rules unless frequent_item_sets.empty?
-      association_rules.select{ |name, confidence| confidence >= min_confidence }
+      association_rules.select{ |name, rule| rule[1] >= min_confidence }
     end
 
     # calculates the support of an item
@@ -75,7 +75,7 @@ module Apriori
         freq_lists.sets.each do |set|
           List.create_subsets(set).each do |combo|
             rule_name = "#{combo.join(',')}=>#{(set.flatten - combo.flatten).join(',')}"
-            association_rules[rule_name] ||= confidence(combo.flatten, (set.flatten - combo.flatten))
+            association_rules[rule_name] ||= [support(set), confidence(combo.flatten, (set.flatten - combo.flatten))]
           end
         end
       end
