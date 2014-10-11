@@ -1,11 +1,17 @@
 #!/usr/bin/env ruby
 require 'apriori'
 
+puts "Please enter a database(s)(Seperate multiple databases by a comma): "
+database = gets.chomp
+puts "Please enter a minimum support percent (As a while number i.e 10):"
+min_support = gets.chomp
+puts "Please enter a minimum confidence percent (As a while number i.e 50):"
+min_confidence = gets.chomp
 
-databases = ['database1.txt', 'database2.txt', 'database3.txt', 'database4.txt', 'database5.txt']
+databases = database.split(',')
 
-# read text file
 databases.each do |database|
+# read text file
   transaction = 0
   # instantiate new hash
   data_set = {}
@@ -32,7 +38,7 @@ databases.each do |database|
   item_set = Apriori::ItemSet.new(data_set)
 
   # mine item set to produce association rules
-  association_rules = item_set.mine(40,60)
+  association_rules = item_set.mine(min_support.to_i,min_confidence.to_i)
 
   # print out association rules
   association_rules.each do |name, rule|
