@@ -10,9 +10,9 @@ databases.each do |database|
   # instantiate new hash
   data_set = {}
 
-  puts "======================"
+  puts "================================"
   puts "Now mining #{database}"
-  puts "======================"
+  puts "================================"
 
   f = File.open(database, "r")
 
@@ -23,6 +23,11 @@ databases.each do |database|
   end
   f.close
 
+  data_set.each{|transaction, values| puts "Transaction: #{transaction.to_s}: #{values.to_s}"}
+  puts '=================='
+  puts 'Association Rules'
+  puts '=================='
+
   # create new Apriori ItemSet
   item_set = Apriori::ItemSet.new(data_set)
 
@@ -32,7 +37,7 @@ databases.each do |database|
   # print out association rules
   association_rules.each do |name, rule|
     puts name
-    puts "Support: #{rule[0]}, Confidence: #{rule[1]}"
+    puts "Support: #{rule[0]}%, Confidence: #{rule[1]}%"
     puts '----------'
   end
 end
