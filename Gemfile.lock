@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    apriori (0.0.1)
+    apriori-ruby (0.0.8)
 
 GEM
   remote: https://rubygems.org/
@@ -39,7 +39,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  apriori!
+  apriori-ruby!
   bundler (~> 1.7)
   factory_girl
   rake (~> 10.0)
