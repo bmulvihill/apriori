@@ -16,7 +16,7 @@ gem 'apriori-ruby'
 
 Sample Usage
 ```ruby
-  test_data = {t1: [1,2,3,4], t2:[1,2,4,5], t3: [2,3,4,5]}
+  test_data = [[1,2,3,4], [1,2,4,5], [2,3,4,5]]
   item_set = Apriori::ItemSet.new(test_data)
   support = 50
   confidence = 60
