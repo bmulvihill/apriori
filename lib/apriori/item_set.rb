@@ -8,33 +8,22 @@ module Apriori
 
     def mine(min_support=0, min_confidence=0)
       @min_support, @min_confidence, @candidates = min_support, min_confidence, nil
-      create_frequent_item_sets(min_support)
-      create_association_rules(min_confidence)
-    end
-
-    def create_frequent_item_sets min_support
-      @min_support = min_support
       make_item_sets
-      frequent_item_sets
+      create_association_rules
     end
 
-    def create_association_rules min_confidence
-      make_association_rules unless frequent_item_sets.empty?
-      association_rules.select{ |name, rule| rule >= min_confidence }
-    end
-
-    def support item
+    def support(item)
       (count_frequency(item).to_f / transactions.size) * 100
     end
 
-    def confidence set1, set2
+    def confidence(set1, set2)
       (support(set1 + set2) / support(set1)) * 100
     end
 
-    def count_frequency set
-      transactions.map do |items|
+    def count_frequency(set)
+      transactions.count do |items|
         contains_all?(items, set)
-      end.reject { |item| item == false }.size
+      end
     end
 
     private
@@ -45,10 +34,14 @@ module Apriori
 
     def make_item_sets
       while candidates.any?
-        list = List.new(new_candidates)
-        frequent_item_sets << list
-        @candidates = list.make_candidates
+        frequent_item_sets << List.new(new_candidates)
+        @candidates = frequent_item_sets.last.make_candidates
       end
+    end
+
+    def create_association_rules
+      make_association_rules unless frequent_item_sets.empty?
+      association_rules.select { |name, rule| rule >= min_confidence }
     end
 
     def make_association_rules
@@ -72,7 +65,7 @@ module Apriori
       @frequent_item_sets[min_support] ||= []
     end
 
-    def contains_all? set, subset
+    def contains_all?(set, subset)
       set.to_set.superset? subset.to_set
     end
 
